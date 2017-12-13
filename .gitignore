@@ -1,0 +1,5 @@
+ngrok.exe
+cat_db.json
+.idea/*
+__pycache__/*
+*pyc
