@@ -21,4 +21,4 @@ It's an example of an integration between Walabot and Alexa.
  * Run `s = socket.socket()`
  * Run `s.connect(("127.0.0.1", 9999))`
  * Run `s.send(json.dumps({"cat_status_field": 1}).encode('UTF-8'))`
- * For adding other rooms with different configuration please repeat the previous step using different parameters
+ * For testing with live cats, please repeat the previous step setting "cat_status_field" to 2
