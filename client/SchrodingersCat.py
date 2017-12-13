@@ -1,8 +1,13 @@
+"""
+Initialize and configure the Walabot. Check on the cat and start sending data to the server.
+"""
+
 from __future__ import print_function # wlbt works on both Python 2 and 3.
 from datetime import datetime  # used to the current time
 from sys import platform
 from imp import load_source
 import socket
+import json
 from imp import load_source
 wlbt = load_source('WalabotAPI',
     'C:/Program Files/Walabot/WalabotSDK/python/WalabotAPI.py')
@@ -69,7 +74,7 @@ def stopAndDisconnectWalabot():
     print ('Termination successful')
 
 def catExists():
-    """ Detect and record whether or not there is a target and whether or not it is breathing. 
+    """ Detect and record whether or not there is a target and whether or not it is breathing.
         Returns:
         dataList:      A list of pairs of whether or not there was a target and whether or not it was moving
     """
@@ -82,22 +87,22 @@ def catExists():
             if breathing == 1:
                 print("the cat is alive!")
                 catStatus = 2
-            else: 
+            else:
                 print("the cat is dead!")
                 catStatus = 1
         else:
             print("There's no cat in this box")
             catStatus = 0
-        print(currentTime+result+numToDisplay)
         return catStatus
 
 def isBreathing():
-    breath = wlbt.GetImageEnergy() # use image energy of walabot to detect breathing
-    if breath > breathLimit: 
+    breath = wlbt.GetImageEnergy()
+    # use image energy of walabot to detect breathing
+    if breath > breathLimit:
     # if the current average range of image energy is above the threshhold
     # the cat is breathing
         return 1
-    else: 
+    else:
         return 0
 
 def SchrodingersCat():
@@ -108,17 +113,19 @@ def SchrodingersCat():
     # 3) Start: Start the system in preparation for scanning.
     startAndCalibrateWalabot()
     try:
+        #create a socket object named client_socket
         client_socket = socket.socket()
+        #connect to the remote socket
         client_socket.connect((SERVER_ADDRESS, SERVER_PORT))
         while True:
+            #whenever the socket is connected, send the
             catStatus = catExists()
-            # Run this line in python2.7
+            print(catStatus)
             # Run this line in python2.7
             # client_socket.send(json.dumps(json.dumps({cat_status_field": catStatus}).encode('UTF-8')))
-            # print targets found
             # Run this line in python3
-            client_socket.send(json.dumps({"cat_status_field": CAT_STATUS}
-                                          ).encode('UTF-8'))
+            client_socket.send(json.dumps({"cat_status_field": catStatus}).encode('UTF-8'))
+    except socket.error:
         print("Server is currently unavailable.")
     except KeyboardInterrupt:
         pass

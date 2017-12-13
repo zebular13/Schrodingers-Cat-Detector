@@ -10,9 +10,9 @@ from threading import Thread
 from tinydb import Query
 
 from DBHandler import DBHandler as TinyDB
-from config import DB_PATH, UTF_FORMAT, CAT_STATUS_FIELD, CAT_DATA_TABLE
+from config import DB_PATH, UTF_FORMAT, CAT_STATUS_FIELD
 
-CONNECTION_CLOSE_MESSAGE = ''
+CONNECTION_CLOSE_MESSAGE = 'Connection is closed'
 BACKLOG = 5
 MAX_MESSAGE_SIZE = 1024
 CONNECTION_SOCKET_INDEX = 0
@@ -47,7 +47,7 @@ class CatServer:
         self.server_socket = socket.socket()
         self.server_socket.bind(self.server_address)
         self.server_socket.listen(BACKLOG)
-        self.cat_db = TinyDB(DB_PATH, default_table=CAT_DATA_TABLE)
+        self.cat_db = TinyDB(DB_PATH)
         self.box = Query()
         self.connections = []
 
