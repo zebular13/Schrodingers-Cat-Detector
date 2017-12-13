@@ -3,7 +3,8 @@ General configuration for the project.
 """
 
 # DB related config
-CAT_STATUS_FIELD = 'cat_status_field'
+CAT_STATUS_FIELD = "cat_status_field"
+CAT_DATA_TABLE = "cat_data"
 
 # TODO: To be configured to the db path.
 DB_PATH = r"C:\Users\monic\SchrodingersCat\cat-server\cat_db.json"

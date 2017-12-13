@@ -10,7 +10,7 @@ from config import HOST, PORT
 
 def main():
     """
-    Start the server that communicates with Walabot and the flask app the communicated with Alexa.
+    Start the server that communicates with Walabot and the flask app that communicates with Alexa.
     """
     try:
         server = CatServer(HOST, PORT)
