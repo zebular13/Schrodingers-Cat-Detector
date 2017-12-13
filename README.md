@@ -1,4 +1,4 @@
-# Meeting Room #
+# Schrodinger's Cat Detector #
 This app looks in the box for you and tells you if Schrodinger's cat is alive or dead.
 It's an example of an integration between Walabot and Alexa.
 
