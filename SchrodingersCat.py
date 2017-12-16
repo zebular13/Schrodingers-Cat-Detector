@@ -6,9 +6,6 @@ from __future__ import print_function # wlbt works on both Python 2 and 3.
 from datetime import datetime  # used to the current time
 from sys import platform
 from imp import load_source
-import socket
-import json
-from imp import load_source
 wlbt = load_source('WalabotAPI',
     'C:/Program Files/Walabot/WalabotSDK/python/WalabotAPI.py')
 #from api.walabot_api import WalabotAPI
@@ -30,8 +27,10 @@ wlbt.Init()
 # Configure Walabot database install location (for windows)
 wlbt.SetSettingsFolder()
 
+catStatus = None
 breathLimit = 0.0005 # below 0.0005 is background for derivative mode
                # 0.01 for NONE filter mode works for about 50cm
+
 def verifyWalabotIsConnected():
     """ Check for Walabot connectivity. loop until detect a Walabot.
     """
@@ -112,26 +111,14 @@ def SchrodingersCat():
     setWalabotSettings()
     # 3) Start: Start the system in preparation for scanning.
     startAndCalibrateWalabot()
-    try:
-        #create a socket object named client_socket
-        client_socket = socket.socket()
-        #connect to the remote socket
-        client_socket.connect((SERVER_ADDRESS, SERVER_PORT))
-        while True:
-            #whenever the socket is connected, send the
-            catStatus = catExists()
-            print(catStatus)
-            # Run this line in python2.7
-            # client_socket.send(json.dumps(json.dumps({cat_status_field": catStatus}).encode('UTF-8')))
-            # Run this line in python3
-            client_socket.send(json.dumps({"cat_status_field": catStatus}).encode('UTF-8'))
-    except socket.error:
-        print("Server is currently unavailable.")
-    except KeyboardInterrupt:
-        pass
+    
+    #whenever the socket is connected, get the cat's status
+    catStatus = catExists()
+    print(catStatus)
+   
     # 7) Stop and Disconnect.
-    finally:
-        stopAndDisconnectWalabot()
+
+    stopAndDisconnectWalabot()
 
 if __name__ == '__main__':
     SchrodingersCat()
