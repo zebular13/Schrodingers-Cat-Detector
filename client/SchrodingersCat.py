@@ -70,11 +70,11 @@ def stopAndDisconnectWalabot():
     print ('Termination successful')
 
 def catExists():
-    """ Detect and record whether or not there is a target and whether or not it is breathing.       
+    """ Detect and record whether or not there is a target and whether or not it is breathing.      
     """
     currentTime = datetime.now().strftime('%H:%M:%S')
     while True:
-        wlbt.Trigger()
+        #wlbt.Trigger()
         target = wlbt.GetSensorTargets()
         if target:
             breathing = isBreathing()

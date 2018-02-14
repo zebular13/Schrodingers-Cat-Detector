@@ -107,8 +107,8 @@ class CatServer:
                 data = json.loads(msg)
                 print("Got {0} from client {1}".format(data, address))
                 # Update the existing row with the new data.
-                # If there isn't a room row in the db, so we insert the row.
-                if self.cat_db.search(self.cat_in_box.cat_status_field == []):
+                # If there isn't a cat_status row in the db we insert the row.
+                if not self.cat_db.search(self.cat_in_box.cat_status_field.exists()):
                     print("Inserting new row.")
                     self.cat_db.insert(data)
                 else:
