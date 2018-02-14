@@ -14,17 +14,13 @@ wlbt = load_source('WalabotAPI',
 #from api.walabot_api import WalabotAPI
 
 R_MIN, R_MAX, R_RES = 10, 60, 2  # SetArenaR parameters
-THETA_MIN, THETA_MAX, THETA_RES = -10, 10, 10  # SetArenaTheta parameters
-PHI_MIN, PHI_MAX, PHI_RES = -10, 10, 2  # SetArenaPhi parametes
+THETA_MIN, THETA_MAX, THETA_RES = 0, 10, 10  # SetArenaTheta parameters
+PHI_MIN, PHI_MAX, PHI_RES = 0, 10, 2  # SetArenaPhi parametes
 #THRESHOLD = 15  # SetThreshold parameters
 ASSUMED_FRAME_RATE = 10
 # TODO: Need to be configured to real server's ip and port
 SERVER_ADDRESS = "127.0.0.1"
 SERVER_PORT = 9999
-
-#from imp import load_source
-#wlbt = load_source(‘WalabotAPI’,
-#‘C:/Program Files/Walabot/WalabotSDK/python/WalabotAPI.py’)
 
 wlbt.Init()
 # Configure Walabot database install location (for windows)
@@ -74,24 +70,22 @@ def stopAndDisconnectWalabot():
     print ('Termination successful')
 
 def catExists():
-    """ Detect and record whether or not there is a target and whether or not it is breathing.
-        Returns:
-        dataList:      A list of pairs of whether or not there was a target and whether or not it was moving
+    """ Detect and record whether or not there is a target and whether or not it is breathing.       
     """
     currentTime = datetime.now().strftime('%H:%M:%S')
     while True:
         wlbt.Trigger()
-        target = wlbt.GetImagingTargets()
+        target = wlbt.GetSensorTargets()
         if target:
             breathing = isBreathing()
             if breathing == 1:
-                print("the cat is alive!")
+                #print("the cat is alive!")
                 catStatus = 2
             else:
-                print("the cat is dead!")
+                #print("the cat is dead!")
                 catStatus = 1
         else:
-            print("There's no cat in this box")
+            #print("There's no cat in this box")
             catStatus = 0
         return catStatus
 
@@ -113,18 +107,21 @@ def SchrodingersCat():
     # 3) Start: Start the system in preparation for scanning.
     startAndCalibrateWalabot()
     try:
-        #create a socket object named client_socket
+        #create a socket object named client_socket  
         client_socket = socket.socket()
         #connect to the remote socket
         client_socket.connect((SERVER_ADDRESS, SERVER_PORT))
+        catStatus = None
         while True:
-            #whenever the socket is connected, send the
+            #whenever the socket is connected, send the cat status
+            prevCatStatus = catStatus
             catStatus = catExists()
-            print(catStatus)
-            # Run this line in python2.7
-            # client_socket.send(json.dumps(json.dumps({cat_status_field": catStatus}).encode('UTF-8')))
-            # Run this line in python3
-            client_socket.send(json.dumps({"cat_status_field": catStatus}).encode('UTF-8'))
+            if prevCatStatus != catStatus:
+                print(catStatus)
+                # Run this line in python2.7
+                # client_socket.send(json.dumps(json.dumps({cat_status_field": catStatus}).encode('UTF-8')))
+                # Run this line in python3
+                client_socket.send(json.dumps({"cat_status_field": catStatus}).encode('UTF-8'))
     except socket.error:
         print("Server is currently unavailable.")
     except KeyboardInterrupt:
