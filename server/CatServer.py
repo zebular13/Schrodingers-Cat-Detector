@@ -18,7 +18,7 @@ MAX_MESSAGE_SIZE = 1024
 CONNECTION_SOCKET_INDEX = 0
 ADDRESS_INDEX = 1
 SELECT_TIMEOUT = 5
-SELECT_TIMEOUT = 5
+
 
 class CatServer:
     """
@@ -48,7 +48,7 @@ class CatServer:
         self.server_socket.bind(self.server_address)
         self.server_socket.listen(BACKLOG)
         self.cat_db = TinyDB(DB_PATH, default_table=CAT_DATA_TABLE)
-        self.CatInBox = Query()
+        self.cat_in_box = Query()
         self.connections = []
 
     def start(self):
@@ -101,14 +101,20 @@ class CatServer:
             # if the msg is empty that means that the client closed the connection.
             if msg == CONNECTION_CLOSE_MESSAGE:
                 self.handle_connection_close(client_connection, address)
-                print("got a message and we need to handle int")
+                print("got a message and we need to handle it")
             # It means that we got a message from the Walabot and we need to handle it.
             else:
                 data = json.loads(msg)
                 print("Got {0} from client {1}".format(data, address))
                 # Update the existing row with the new data.
-                print("Updating box with new data, cat status is: {0}".format(data[CAT_STATUS_FIELD]))
-                self.cat_db.update({CAT_STATUS_FIELD: data[CAT_STATUS_FIELD]})
+                # If there isn't a room row in the db, so we insert the row.
+                if self.cat_db.search(self.cat_in_box.cat_status_field == []):
+                    print("Inserting new row.")
+                    self.cat_db.insert(data)
+                else:
+                    print("Updating box with new data, cat status is: {0}".format(data[CAT_STATUS_FIELD]))
+                    self.cat_db.update({CAT_STATUS_FIELD: data[CAT_STATUS_FIELD]})
+                    print("updated db successfully")
         except socket.error:
             self.handle_connection_close(client_connection, address)
 

@@ -2,7 +2,6 @@
 Export a decorator for singleton usage.
 """
 
-
 def singleton(class_):
     instances = {}
 
