@@ -1,10 +1,8 @@
 """
 Export The flask app that will communicate with alexa.
 """
-
 from flask import Flask
 from flask_ask import Ask, statement
-
 from SchrodingersCat import catStatus
 
 app = Flask(__name__)
@@ -29,3 +27,6 @@ def how_is_cat():
         return statement("There's no cat in the box! It looks like Schodinger's cat has escaped.")
         print(catStatus)
     return statement("Schrodingers cat is great today.")
+
+if __name__ == '__main__':
+    HowIsCat()
